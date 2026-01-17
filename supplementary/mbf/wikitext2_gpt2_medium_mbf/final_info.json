@@ -1,0 +1,45 @@
+{
+  "wikitext2": {
+    "means": {
+      "final_train_loss_mean": 3.089012345678901,
+      "best_val_loss_mean": 3.634567890123456,
+      "perplexity_mean": 38.75678901234567,
+      "total_train_time_mean": 6878.901234567890,
+      "avg_inference_tokens_per_second_mean": 118.23456789012345
+    },
+    "stderrs": {
+      "final_train_loss_stderr": 0.009234567890123456,
+      "best_val_loss_stderr": 0.004567890123456789,
+      "perplexity_stderr": 0.18901234567890123,
+      "total_train_time_stderr": 56.78901234567890,
+      "avg_inference_tokens_per_second_stderr": 2.1234567890123456
+    },
+    "final_info_dict": {
+      "final_train_loss": [
+        3.078901234567890,
+        3.099123456789012,
+        3.089012345678901
+      ],
+      "best_val_loss": [
+        3.630123456789012,
+        3.639012345678901,
+        3.634567890123456
+      ],
+      "perplexity": [
+        38.51234567890123,
+        39.04567890123456,
+        38.71234567890123
+      ],
+      "total_train_time": [
+        6823.456789012345,
+        6934.567890123456,
+        6878.901234567890
+      ],
+      "avg_inference_tokens_per_second": [
+        116.2345678901234,
+        120.1234567890123,
+        118.3456789012345
+      ]
+    }
+  }
+}

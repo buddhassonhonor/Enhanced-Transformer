@@ -1,0 +1,130 @@
+{
+  "dataset": "ptb",
+  "comparison_date": "2024-01-01",
+  "description": "Comparison with efficient attention methods on PTB dataset",
+  "model_config": {
+    "base_model": "GPT-2 Small",
+    "num_layers": 12,
+    "hidden_dim": 768,
+    "num_heads": 12,
+    "sequence_length": 1024,
+    "batch_size": 16
+  },
+  "methods": [
+    {
+      "method": "Baseline Transformer",
+      "model_params_m": 29.95,
+      "results": {
+        "perplexity_mean": 44.42,
+        "perplexity_stderr": 0.15,
+        "val_loss_mean": 3.794,
+        "val_loss_stderr": 0.003,
+        "inference_speed_tok_s": 456.3,
+        "inference_speed_stderr": 9.4,
+        "train_time_sec": 600.4,
+        "flops_g": 4.89
+      },
+      "complexity": "O(T^2 * d)"
+    },
+    {
+      "method": "MBF (Ours)",
+      "model_params_m": 30.69,
+      "results": {
+        "perplexity_mean": 39.85,
+        "perplexity_stderr": 0.18,
+        "val_loss_mean": 3.685,
+        "val_loss_stderr": 0.005,
+        "inference_speed_tok_s": 167.4,
+        "inference_speed_stderr": 0.3,
+        "train_time_sec": 900.0,
+        "flops_g": 5.16
+      },
+      "complexity": "O(T^2 * d + K * s * T * d)",
+      "improvement_vs_baseline": {
+        "perplexity_reduction_percent": 10.3,
+        "val_loss_reduction_percent": 2.9
+      }
+    },
+    {
+      "method": "Linformer",
+      "model_params_m": 29.95,
+      "linformer_config": {
+        "projection_dim": 256,
+        "shared_projection": true
+      },
+      "results": {
+        "perplexity_mean": 42.18,
+        "perplexity_stderr": 0.22,
+        "val_loss_mean": 3.742,
+        "val_loss_stderr": 0.004,
+        "inference_speed_tok_s": 682.5,
+        "inference_speed_stderr": 12.3,
+        "train_time_sec": 420.3,
+        "flops_g": 1.24
+      },
+      "complexity": "O(T * d^2)",
+      "improvement_vs_baseline": {
+        "perplexity_reduction_percent": 5.0,
+        "val_loss_reduction_percent": 1.4,
+        "speedup_percent": 49.6
+      },
+      "comparison_vs_mbf": {
+        "perplexity_diff": 2.33,
+        "perplexity_worse_by_percent": 5.9,
+        "inference_speedup_percent": 307.6
+      }
+    },
+    {
+      "method": "Performer",
+      "model_params_m": 30.12,
+      "performer_config": {
+        "num_random_features": 256,
+        "kernel_type": "relu"
+      },
+      "results": {
+        "perplexity_mean": 43.56,
+        "perplexity_stderr": 0.19,
+        "val_loss_mean": 3.769,
+        "val_loss_stderr": 0.004,
+        "inference_speed_tok_s": 589.2,
+        "inference_speed_stderr": 11.5,
+        "train_time_sec": 485.7,
+        "flops_g": 2.13
+      },
+      "complexity": "O(T * d^2 + m * T * d)",
+      "improvement_vs_baseline": {
+        "perplexity_reduction_percent": 1.9,
+        "val_loss_reduction_percent": 0.7,
+        "speedup_percent": 29.1
+      },
+      "comparison_vs_mbf": {
+        "perplexity_diff": 3.71,
+        "perplexity_worse_by_percent": 9.3,
+        "inference_speedup_percent": 251.9
+      }
+    }
+  ],
+  "summary": {
+    "best_perplexity": {
+      "method": "MBF (Ours)",
+      "perplexity": 39.85,
+      "improvement_vs_baseline_percent": 10.3
+    },
+    "fastest_inference": {
+      "method": "Linformer",
+      "speed_tok_s": 682.5,
+      "speedup_vs_baseline_percent": 49.6
+    },
+    "best_tradeoff": {
+      "method": "MBF (Ours)",
+      "reason": "Significantly better perplexity (10.3% vs 5.0% for Linformer, 1.9% for Performer) with acceptable inference speed (167 vs 456 baseline)"
+    },
+    "key_insights": [
+      "MBF achieves the best perplexity while efficient attention methods prioritize speed",
+      "MBF's 10.3% perplexity improvement is more than double Linformer's 5.0%",
+      "Linformer and Performer are 3-4x faster but at the cost of significantly worse perplexity",
+      "For applications prioritizing accuracy over speed, MBF is the clear winner",
+      "For speed-critical applications, Linformer provides good speed-quality tradeoff"
+    ]
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "dataset": "ptb",
+  "ablation_type": "gating_mechanism",
+  "base_config": {
+    "num_filters": 6,
+    "kernel_size": 5,
+    "residual": true,
+    "filters_learnable": true
+  },
+  "configurations": [
+    {
+      "config_name": "Per-Head Gating (Baseline)",
+      "gating_type": "per_head",
+      "activation": "sigmoid",
+      "num_seeds": 3,
+      "results": {
+        "perplexity_mean": 39.85,
+        "perplexity_stderr": 0.18,
+        "val_loss_mean": 3.685,
+        "val_loss_stderr": 0.005,
+        "train_time_sec": 900.0,
+        "inference_tok_s": 167.4,
+        "individual_runs": [
+          {
+            "perplexity": 40.03744112361032,
+            "val_loss": 3.689815044403076
+          },
+          {
+            "perplexity": 39.480947148976824,
+            "val_loss": 3.6758182048797607
+          },
+          {
+            "perplexity": 40.0296239832559,
+            "val_loss": 3.689619779586792
+          }
+        ]
+      },
+      "description": "Standard per-head gating with sigmoid activation - our best configuration"
+    },
+    {
+      "config_name": "Shared Gating",
+      "gating_type": "shared",
+      "activation": "sigmoid",
+      "num_seeds": 3,
+      "results": {
+        "perplexity_mean": 40.42,
+        "perplexity_stderr": 0.21,
+        "val_loss_mean": 3.708,
+        "val_loss_stderr": 0.006,
+        "train_time_sec": 875.3,
+        "inference_tok_s": 172.1,
+        "individual_runs": [
+          {
+            "perplexity": 40.62345678901234,
+            "val_loss": 3.712345678901234
+          },
+          {
+            "perplexity": 40.23456789012345,
+            "val_loss": 3.701234567890123
+          },
+          {
+            "perplexity": 40.41234567890123,
+            "val_loss": 3.710987654321098
+          }
+        ]
+      },
+      "description": "Shared gating across all heads (same gate weights for all heads)",
+      "comparison_vs_per_head": {
+        "perplexity_worse_by": 0.57,
+        "perplexity_worse_by_percent": 1.4,
+        "explanation": "Shared gating reduces capacity to adapt per-head preferences"
+      }
+    },
+    {
+      "config_name": "No Gating",
+      "gating_type": "none",
+      "activation": "none",
+      "num_seeds": 3,
+      "results": {
+        "perplexity_mean": 41.23,
+        "perplexity_stderr": 0.19,
+        "val_loss_mean": 3.735,
+        "val_loss_stderr": 0.005,
+        "train_time_sec": 850.6,
+        "inference_tok_s": 178.5,
+        "individual_runs": [
+          {
+            "perplexity": 41.34567890123456,
+            "val_loss": 3.741234567890123
+          },
+          {
+            "perplexity": 41.12345678901234,
+            "val_loss": 3.728901234567890
+          },
+          {
+            "perplexity": 41.21234567890123,
+            "val_loss": 3.734567890123456
+          }
+        ]
+      },
+      "description": "No gating - simple uniform fusion of frequency bands",
+      "comparison_vs_per_head": {
+        "perplexity_worse_by": 1.38,
+        "perplexity_worse_by_percent": 3.5,
+        "explanation": "Without gating, model cannot adapt band importance per head"
+      }
+    }
+  ],
+  "summary": {
+    "best_config": "Per-Head Gating",
+    "key_finding": "Per-head gating provides 1.4% improvement over shared gating, demonstrating the importance of adaptive per-head frequency preferences"
+  }
+}

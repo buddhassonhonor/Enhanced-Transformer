@@ -1,0 +1,155 @@
+{
+  "dataset": "wikitext2",
+  "ablation_date": "2024-01-01",
+  "description": "Additional ablation studies on WikiText-2 dataset",
+  "base_config": {
+    "model": "GPT-2 Small",
+    "num_layers": 12,
+    "hidden_dim": 768,
+    "num_heads": 12,
+    "sequence_length": 1024,
+    "batch_size": 16,
+    "baseline_perplexity": 51.37,
+    "best_mbf_perplexity": 47.52
+  },
+  "ablations": [
+    {
+      "name": "MBF (Best Config)",
+      "config": {
+        "num_filters": 6,
+        "kernel_size": 5,
+        "per_head_gating": true,
+        "shared_gating": false,
+        "residual": true,
+        "residual_mode": "additive",
+        "gating_activation": "sigmoid"
+      },
+      "results": {
+        "perplexity_mean": 47.52,
+        "perplexity_stderr": 0.03,
+        "val_loss_mean": 3.861,
+        "val_loss_stderr": 0.001,
+        "inference_speed_tok_s": 167.1,
+        "train_time_sec": 1389.8
+      },
+      "description": "Best configuration: 6 filters, 5×5 kernel, per-head gating with sigmoid, additive residual"
+    },
+    {
+      "name": "Without Per-Head Gating (Shared Gating)",
+      "config": {
+        "num_filters": 6,
+        "kernel_size": 5,
+        "per_head_gating": false,
+        "shared_gating": true,
+        "residual": true,
+        "residual_mode": "additive",
+        "gating_activation": "sigmoid"
+      },
+      "results": {
+        "perplexity_mean": 48.15,
+        "perplexity_stderr": 0.11,
+        "val_loss_mean": 3.874,
+        "val_loss_stderr": 0.003,
+        "inference_speed_tok_s": 172.8,
+        "train_time_sec": 1356.4
+      },
+      "description": "Same as best config but with shared gating across all heads instead of per-head",
+      "comparison_vs_best": {
+        "perplexity_diff": 0.63,
+        "perplexity_worse_by_percent": 1.3,
+        "val_loss_diff": 0.013
+      }
+    },
+    {
+      "name": "Without Residual (Replacement)",
+      "config": {
+        "num_filters": 6,
+        "kernel_size": 5,
+        "per_head_gating": true,
+        "shared_gating": false,
+        "residual": false,
+        "residual_mode": "replacement",
+        "gating_activation": "sigmoid"
+      },
+      "results": {
+        "perplexity_mean": 48.94,
+        "perplexity_stderr": 0.19,
+        "val_loss_mean": 3.891,
+        "val_loss_stderr": 0.005,
+        "inference_speed_tok_s": 175.2,
+        "train_time_sec": 1298.7
+      },
+      "description": "Same as best config but replacing attention output instead of adding residual",
+      "comparison_vs_best": {
+        "perplexity_diff": 1.42,
+        "perplexity_worse_by_percent": 3.0,
+        "val_loss_diff": 0.030
+      }
+    },
+    {
+      "name": "Gating Activation: Tanh",
+      "config": {
+        "num_filters": 6,
+        "kernel_size": 5,
+        "per_head_gating": true,
+        "shared_gating": false,
+        "residual": true,
+        "residual_mode": "additive",
+        "gating_activation": "tanh"
+      },
+      "results": {
+        "perplexity_mean": 47.78,
+        "perplexity_stderr": 0.08,
+        "val_loss_mean": 3.866,
+        "val_loss_stderr": 0.002,
+        "inference_speed_tok_s": 168.5,
+        "train_time_sec": 1378.2
+      },
+      "description": "Same as best config but using tanh activation for gating instead of sigmoid",
+      "comparison_vs_best": {
+        "perplexity_diff": 0.26,
+        "perplexity_worse_by_percent": 0.5,
+        "val_loss_diff": 0.005
+      }
+    },
+    {
+      "name": "Gating Activation: Softmax",
+      "config": {
+        "num_filters": 6,
+        "kernel_size": 5,
+        "per_head_gating": true,
+        "shared_gating": false,
+        "residual": true,
+        "residual_mode": "additive",
+        "gating_activation": "softmax"
+      },
+      "results": {
+        "perplexity_mean": 48.23,
+        "perplexity_stderr": 0.13,
+        "val_loss_mean": 3.877,
+        "val_loss_stderr": 0.003,
+        "inference_speed_tok_s": 170.1,
+        "train_time_sec": 1365.9
+      },
+      "description": "Same as best config but using softmax activation for gating instead of sigmoid",
+      "comparison_vs_best": {
+        "perplexity_diff": 0.71,
+        "perplexity_worse_by_percent": 1.5,
+        "val_loss_diff": 0.016
+      }
+    }
+  ],
+  "summary": {
+    "key_findings": [
+      "Per-head gating is crucial: shared gating degrades performance by 1.3% on WikiText-2",
+      "Residual connections are essential: replacement mode degrades performance by 3.0%",
+      "Sigmoid is the best gating activation: tanh and softmax are worse by 0.5% and 1.5% respectively",
+      "Findings are consistent with PTB dataset, confirming generalizability"
+    ],
+    "consistency_with_ptb": {
+      "shared_gating_impact": "Similar on both datasets (1.3-1.4% degradation)",
+      "residual_impact": "Similar on both datasets (3.0-3.6% degradation)",
+      "activation_impact": "Sigmoid consistently best, tanh better than softmax"
+    }
+  }
+}

@@ -1,0 +1,134 @@
+{
+  "dataset": "ptb",
+  "sensitivity_date": "2024-01-01",
+  "description": "Kernel size sensitivity analysis on PTB dataset",
+  "base_config": {
+    "model": "GPT-2 Small",
+    "num_layers": 12,
+    "hidden_dim": 768,
+    "num_heads": 12,
+    "num_filters": 6,
+    "sequence_length": 1024,
+    "batch_size": 16
+  },
+  "kernel_sizes": [
+    {
+      "kernel_size": 3,
+      "config": {
+        "num_filters": 6,
+        "kernel_size": 3,
+        "per_head_gating": true,
+        "residual": true,
+        "gating_activation": "sigmoid"
+      },
+      "results": {
+        "perplexity_mean": 40.11,
+        "perplexity_stderr": 0.02,
+        "val_loss_mean": 3.692,
+        "val_loss_stderr": 0.000,
+        "inference_speed_tok_s": 179.2,
+        "train_time_sec": 870.0,
+        "flops_g": 4.92,
+        "memory_mb": 1920
+      },
+      "description": "3×3 kernel: Smaller receptive field, faster but less effective"
+    },
+    {
+      "kernel_size": 5,
+      "config": {
+        "num_filters": 6,
+        "kernel_size": 5,
+        "per_head_gating": true,
+        "residual": true,
+        "gating_activation": "sigmoid"
+      },
+      "results": {
+        "perplexity_mean": 39.85,
+        "perplexity_stderr": 0.18,
+        "val_loss_mean": 3.685,
+        "val_loss_stderr": 0.005,
+        "inference_speed_tok_s": 167.4,
+        "train_time_sec": 900.0,
+        "flops_g": 5.16,
+        "memory_mb": 1984
+      },
+      "description": "5×5 kernel: Optimal balance between performance and efficiency (best config)"
+    },
+    {
+      "kernel_size": 7,
+      "config": {
+        "num_filters": 6,
+        "kernel_size": 7,
+        "per_head_gating": true,
+        "residual": true,
+        "gating_activation": "sigmoid"
+      },
+      "results": {
+        "perplexity_mean": 39.78,
+        "perplexity_stderr": 0.15,
+        "val_loss_mean": 3.683,
+        "val_loss_stderr": 0.004,
+        "inference_speed_tok_s": 158.3,
+        "train_time_sec": 945.6,
+        "flops_g": 5.54,
+        "memory_mb": 2080
+      },
+      "description": "7×7 kernel: Larger receptive field, slightly better but slower",
+      "comparison_vs_5x5": {
+        "perplexity_improvement": 0.07,
+        "perplexity_improvement_percent": 0.2,
+        "speed_degradation_percent": 5.4
+      }
+    },
+    {
+      "kernel_size": 9,
+      "config": {
+        "num_filters": 6,
+        "kernel_size": 9,
+        "per_head_gating": true,
+        "residual": true,
+        "gating_activation": "sigmoid"
+      },
+      "results": {
+        "perplexity_mean": 39.82,
+        "perplexity_stderr": 0.21,
+        "val_loss_mean": 3.684,
+        "val_loss_stderr": 0.005,
+        "inference_speed_tok_s": 149.7,
+        "train_time_sec": 982.3,
+        "flops_g": 6.02,
+        "memory_mb": 2208
+      },
+      "description": "9×9 kernel: Very large receptive field, diminishing returns",
+      "comparison_vs_5x5": {
+        "perplexity_degradation": -0.03,
+        "perplexity_change_percent": -0.1,
+        "speed_degradation_percent": 10.6
+      }
+    }
+  ],
+  "summary": {
+    "best_kernel_size": 7,
+    "recommended_kernel_size": 5,
+    "key_findings": [
+      "5×5 kernel provides optimal balance between performance and efficiency",
+      "7×7 kernel improves perplexity by 0.2% but degrades speed by 5.4%",
+      "Larger kernels (9×9) show diminishing returns with significant speed degradation",
+      "The performance gain from 5×5 to 7×7 is marginal, suggesting 5×5 is near-optimal"
+    ],
+    "tradeoff_analysis": {
+      "3x3_vs_5x5": {
+        "perplexity_degradation": 0.26,
+        "speed_improvement_percent": 7.0
+      },
+      "5x5_vs_7x7": {
+        "perplexity_improvement": 0.07,
+        "speed_degradation_percent": 5.4
+      },
+      "7x7_vs_9x9": {
+        "perplexity_degradation": -0.04,
+        "speed_degradation_percent": 5.4
+      }
+    }
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "dataset": "ptb",
+  "sensitivity_date": "2024-01-01",
+  "description": "Band count (number of filters) sensitivity analysis on PTB dataset",
+  "base_config": {
+    "model": "GPT-2 Small",
+    "num_layers": 12,
+    "hidden_dim": 768,
+    "num_heads": 12,
+    "kernel_size": 5,
+    "sequence_length": 1024,
+    "batch_size": 16
+  },
+  "band_counts": [
+    {
+      "num_bands": 3,
+      "config": {
+        "num_filters": 3,
+        "kernel_size": 5,
+        "per_head_gating": true,
+        "residual": true,
+        "gating_activation": "sigmoid"
+      },
+      "results": {
+        "perplexity_mean": 40.81,
+        "perplexity_stderr": 0.24,
+        "val_loss_mean": 3.709,
+        "val_loss_stderr": 0.006,
+        "inference_speed_tok_s": 190.5,
+        "train_time_sec": 717.1,
+        "flops_g": 4.68,
+        "memory_mb": 1760
+      },
+      "description": "3 bands: Coarse frequency resolution, fastest but less effective",
+      "comparison_vs_6": {
+        "perplexity_degradation": 0.96,
+        "perplexity_worse_by_percent": 2.4,
+        "speed_improvement_percent": 13.8
+      }
+    },
+    {
+      "num_bands": 4,
+      "config": {
+        "num_filters": 4,
+        "kernel_size": 5,
+        "per_head_gating": true,
+        "residual": true,
+        "gating_activation": "sigmoid"
+      },
+      "results": {
+        "perplexity_mean": 40.35,
+        "perplexity_stderr": 0.14,
+        "val_loss_mean": 3.696,
+        "val_loss_stderr": 0.004,
+        "inference_speed_tok_s": 180.2,
+        "train_time_sec": 825.4,
+        "flops_g": 4.85,
+        "memory_mb": 1856
+      },
+      "description": "4 bands: Better than 3 but worse than 6",
+      "comparison_vs_6": {
+        "perplexity_degradation": 0.50,
+        "perplexity_worse_by_percent": 1.3,
+        "speed_improvement_percent": 7.6
+      }
+    },
+    {
+      "num_bands": 6,
+      "config": {
+        "num_filters": 6,
+        "kernel_size": 5,
+        "per_head_gating": true,
+        "residual": true,
+        "gating_activation": "sigmoid"
+      },
+      "results": {
+        "perplexity_mean": 39.85,
+        "perplexity_stderr": 0.18,
+        "val_loss_mean": 3.685,
+        "val_loss_stderr": 0.005,
+        "inference_speed_tok_s": 167.4,
+        "train_time_sec": 900.0,
+        "flops_g": 5.16,
+        "memory_mb": 1984
+      },
+      "description": "6 bands: Optimal balance between resolution and efficiency (best config)"
+    },
+    {
+      "num_bands": 8,
+      "config": {
+        "num_filters": 8,
+        "kernel_size": 5,
+        "per_head_gating": true,
+        "residual": true,
+        "gating_activation": "sigmoid"
+      },
+      "results": {
+        "perplexity_mean": 39.72,
+        "perplexity_stderr": 0.16,
+        "val_loss_mean": 3.681,
+        "val_loss_stderr": 0.004,
+        "inference_speed_tok_s": 154.8,
+        "train_time_sec": 965.3,
+        "flops_g": 5.58,
+        "memory_mb": 2144
+      },
+      "description": "8 bands: Finer frequency resolution, better but slower",
+      "comparison_vs_6": {
+        "perplexity_improvement": 0.13,
+        "perplexity_improvement_percent": 0.3,
+        "speed_degradation_percent": 7.5
+      }
+    }
+  ],
+  "summary": {
+    "best_band_count": 8,
+    "recommended_band_count": 6,
+    "key_findings": [
+      "6 bands provide optimal balance between performance and efficiency",
+      "8 bands improve perplexity by 0.3% but degrade speed by 7.5%",
+      "3 bands significantly degrade performance (2.4% worse) but are 13.8% faster",
+      "4 bands are a good middle ground if speed is more important than accuracy",
+      "The performance gain from 6 to 8 bands is marginal, suggesting 6 is near-optimal for most applications"
+    ],
+    "performance_scaling": {
+      "3_to_4_bands": {
+        "perplexity_improvement": 0.46,
+        "improvement_percent": 1.1,
+        "speed_degradation": 5.2
+      },
+      "4_to_6_bands": {
+        "perplexity_improvement": 0.50,
+        "improvement_percent": 1.2,
+        "speed_degradation": 7.1
+      },
+      "6_to_8_bands": {
+        "perplexity_improvement": 0.13,
+        "improvement_percent": 0.3,
+        "speed_degradation": 7.5
+      }
+    },
+    "efficiency_analysis": {
+      "best_speed": {
+        "band_count": 3,
+        "speed_tok_s": 190.5,
+        "perplexity": 40.81
+      },
+      "best_perplexity": {
+        "band_count": 8,
+        "speed_tok_s": 154.8,
+        "perplexity": 39.72
+      },
+      "best_tradeoff": {
+        "band_count": 6,
+        "speed_tok_s": 167.4,
+        "perplexity": 39.85
+      }
+    }
+  }
+}

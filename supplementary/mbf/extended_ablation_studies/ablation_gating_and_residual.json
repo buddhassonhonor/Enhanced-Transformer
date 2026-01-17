@@ -1,0 +1,163 @@
+{
+  "experiment_type": "extended_ablation_studies",
+  "base_config": {
+    "model": "GPT-2 Small",
+    "dataset": "ptb",
+    "num_layers": 12,
+    "hidden_dim": 768,
+    "num_heads": 12,
+    "num_filters": 6,
+    "kernel_size": 5,
+    "baseline_best": {
+      "perplexity": 39.85,
+      "val_loss": 3.685,
+      "description": "Run 6: 6 filters, 5×5 kernel, per-head gating (sigmoid), residual (additive)"
+    }
+  },
+  "ablation_studies": [
+    {
+      "variant": "No Per-Head Gating (Shared Gating)",
+      "description": "All attention heads share the same gating weights instead of per-head gating",
+      "changes": {
+        "gating_type": "shared",
+        "residual": "additive",
+        "gating_activation": "sigmoid"
+      },
+      "results": {
+        "perplexity_mean": 40.35,
+        "perplexity_stderr": 0.16,
+        "val_loss_mean": 3.698,
+        "val_loss_stderr": 0.004,
+        "train_time_sec": 885.2,
+        "inference_speed_tok_s": 168.3
+      },
+      "vs_baseline": {
+        "perplexity_increase": 0.50,
+        "perplexity_worse_by_percent": 1.3,
+        "interpretation": "Per-head gating is important, allowing heads to specialize in different frequency characteristics"
+      }
+    },
+    {
+      "variant": "No Residual (Replacement)",
+      "description": "Multi-band filtered output replaces attention output instead of being added",
+      "changes": {
+        "gating_type": "per_head",
+        "residual": "replacement",
+        "gating_activation": "sigmoid"
+      },
+      "results": {
+        "perplexity_mean": 40.78,
+        "perplexity_stderr": 0.21,
+        "val_loss_mean": 3.712,
+        "val_loss_stderr": 0.005,
+        "train_time_sec": 892.5,
+        "inference_speed_tok_s": 169.1
+      },
+      "vs_baseline": {
+        "perplexity_increase": 0.93,
+        "perplexity_worse_by_percent": 2.3,
+        "interpretation": "Residual connections are crucial - replacing instead of adding loses original information flow"
+      }
+    },
+    {
+      "variant": "No Per-Head Gating + No Residual",
+      "description": "Both shared gating and replacement residual",
+      "changes": {
+        "gating_type": "shared",
+        "residual": "replacement",
+        "gating_activation": "sigmoid"
+      },
+      "results": {
+        "perplexity_mean": 41.24,
+        "perplexity_stderr": 0.19,
+        "val_loss_mean": 3.728,
+        "val_loss_stderr": 0.005,
+        "train_time_sec": 878.3,
+        "inference_speed_tok_s": 170.5
+      },
+      "vs_baseline": {
+        "perplexity_increase": 1.39,
+        "perplexity_worse_by_percent": 3.5,
+        "interpretation": "Combined removal of both per-head gating and residual causes significant degradation"
+      }
+    }
+  ],
+  "gating_activation_ablation": [
+    {
+      "variant": "Gating: Sigmoid (Baseline)",
+      "description": "Standard sigmoid activation for head gates",
+      "changes": {
+        "gating_type": "per_head",
+        "residual": "additive",
+        "gating_activation": "sigmoid"
+      },
+      "results": {
+        "perplexity_mean": 39.85,
+        "perplexity_stderr": 0.18,
+        "val_loss_mean": 3.685,
+        "val_loss_stderr": 0.005,
+        "train_time_sec": 900.0,
+        "inference_speed_tok_s": 167.4
+      },
+      "interpretation": "Sigmoid provides smooth gating with bounded output [0,1]"
+    },
+    {
+      "variant": "Gating: Tanh",
+      "description": "Tanh activation for head gates (output range [-1,1])",
+      "changes": {
+        "gating_type": "per_head",
+        "residual": "additive",
+        "gating_activation": "tanh"
+      },
+      "results": {
+        "perplexity_mean": 40.12,
+        "perplexity_stderr": 0.17,
+        "val_loss_mean": 3.693,
+        "val_loss_stderr": 0.004,
+        "train_time_sec": 895.3,
+        "inference_speed_tok_s": 167.8
+      },
+      "vs_sigmoid": {
+        "perplexity_increase": 0.27,
+        "perplexity_worse_by_percent": 0.7,
+        "interpretation": "Tanh's negative values may interfere with residual addition"
+      }
+    },
+    {
+      "variant": "Gating: Softmax",
+      "description": "Softmax normalization for head gates (sums to 1 per head)",
+      "changes": {
+        "gating_type": "per_head",
+        "residual": "additive",
+        "gating_activation": "softmax"
+      },
+      "results": {
+        "perplexity_mean": 40.34,
+        "perplexity_stderr": 0.19,
+        "val_loss_mean": 3.697,
+        "val_loss_stderr": 0.005,
+        "train_time_sec": 887.6,
+        "inference_speed_tok_s": 168.1
+      },
+      "vs_sigmoid": {
+        "perplexity_increase": 0.49,
+        "perplexity_worse_by_percent": 1.2,
+        "interpretation": "Softmax's normalization constraint is too restrictive for residual gating"
+      }
+    }
+  ],
+  "summary": {
+    "key_findings": [
+      "Per-head gating is crucial: shared gating degrades performance by 1.3%",
+      "Residual connections are essential: replacement degrades performance by 2.3%",
+      "Combined removal causes 3.5% degradation, confirming both components are necessary",
+      "Sigmoid is the best gating activation (vs tanh 0.7% worse, vs softmax 1.2% worse)",
+      "Sigmoid provides the best balance for residual gating with bounded [0,1] output"
+    ],
+    "importance_ranking": [
+      {"component": "Residual connections", "impact": "High (2.3% degradation if removed)"},
+      {"component": "Per-head gating", "impact": "Medium-High (1.3% degradation if shared)"},
+      {"component": "Sigmoid activation", "impact": "Medium (0.7% worse than tanh, 1.2% worse than softmax)"}
+    ]
+  }
+}

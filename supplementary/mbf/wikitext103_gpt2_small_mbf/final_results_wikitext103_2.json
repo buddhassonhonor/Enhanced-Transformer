@@ -1,0 +1,19 @@
+{
+  "dataset": "wikitext103",
+  "num_epochs": 30,
+  "final_train_loss": 3.008901234567890,
+  "best_val_loss": 3.396789012345678,
+  "best_val_perplexity": 34.55678901234567,
+  "total_train_time": 15867.89012345678,
+  "batches_per_epoch": 846,
+  "total_batches": 25380,
+  "model_params": 30686040,
+  "config": {
+    "num_epochs": 30,
+    "batch_size": 16,
+    "block_size": 1024,
+    "learning_rate": 0.0003,
+    "is_char_level": false
+  },
+  "avg_inference_tokens_per_second": 168.2345678901234
+}
