@@ -1,0 +1,19 @@
+{
+  "dataset": "ptb",
+  "num_epochs": 30,
+  "final_train_loss": 2.980521430431957,
+  "best_val_loss": 3.689815044403076,
+  "best_val_perplexity": 40.03744112361032,
+  "total_train_time": 898.4934840202332,
+  "batches_per_epoch": 71,
+  "total_batches": 2130,
+  "model_params": 30686040,
+  "config": {
+    "num_epochs": 30,
+    "batch_size": 16,
+    "block_size": 1024,
+    "learning_rate": 0.0003,
+    "is_char_level": false
+  },
+  "avg_inference_tokens_per_second": 167.2870235887595
+}

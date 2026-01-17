@@ -1,0 +1,88 @@
+{
+  "wikitext2": {
+    "means": {
+      "final_train_loss_mean": 3.096096133759091,
+      "best_val_loss_mean": 3.8768362204233804,
+      "perplexity_mean": 48.27127104767718,
+      "total_train_time_mean": 1367.878051519394,
+      "avg_inference_tokens_per_second_mean": 212.44398426961007
+    },
+    "stderrs": {
+      "final_train_loss_stderr": 0.005607351326439741,
+      "best_val_loss_stderr": 0.0006008448153867756,
+      "perplexity_stderr": 0.028995112218577933,
+      "total_train_time_stderr": 4.091115438134109,
+      "avg_inference_tokens_per_second_stderr": 3.071213755653306
+    },
+    "final_info_dict": {
+      "final_train_loss": [
+        3.0904622013936907,
+        3.1073107943438845,
+        3.090515405539698
+      ],
+      "best_val_loss": [
+        3.877345561981201,
+        3.875638961791992,
+        3.8775241374969482
+      ],
+      "perplexity": [
+        48.29584644248795,
+        48.21349503226459,
+        48.30447166827901
+      ],
+      "total_train_time": [
+        1368.2667412757874,
+        1374.761726617813,
+        1360.6056866645813
+      ],
+      "avg_inference_tokens_per_second": [
+        206.89041641855346,
+        217.4935363072706,
+        212.94800008300612
+      ]
+    }
+  },
+  "ptb": {
+    "means": {
+      "final_train_loss_mean": 3.047286608969102,
+      "best_val_loss_mean": 3.6915314197540283,
+      "perplexity_mean": 40.10622834203771,
+      "total_train_time_mean": 870.009349266688,
+      "avg_inference_tokens_per_second_mean": 214.65436211029387
+    },
+    "stderrs": {
+      "final_train_loss_stderr": 0.009314494820919504,
+      "best_val_loss_stderr": 0.0004719256134176943,
+      "perplexity_stderr": 0.018931501112873145,
+      "total_train_time_stderr": 11.21630805201977,
+      "avg_inference_tokens_per_second_stderr": 1.3324730999308283
+    },
+    "final_info_dict": {
+      "final_train_loss": [
+        3.037948037537051,
+        3.065915577848193,
+        3.0379962115220622
+      ],
+      "best_val_loss": [
+        3.6911239624023438,
+        3.692472457885742,
+        3.690997838973999
+      ],
+      "perplexity": [
+        40.08988116331057,
+        40.14397865390239,
+        40.08482520890018
+      ],
+      "total_train_time": [
+        863.5909285545349,
+        891.8335967063904,
+        854.6035225391388
+      ],
+      "avg_inference_tokens_per_second": [
+        215.8610029749916,
+        216.1088237494601,
+        211.99325960642992
+      ]
+    }
+  }
+}
